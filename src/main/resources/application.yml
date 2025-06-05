@@ -1,0 +1,23 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      properties:
+        #위의 JsonDesrializer 옵션을 사용하려면 아래의 설정을 넣어 줘야 한다.(경로를 지정해줘야 하지만 우리는 다 허용)
+        spring.json.trusted.package: "*"
+        allow.auto.create.topic: false
+    listener:
+      #형식적으로 이런 설정을 할수 있다라고 보여주기 위해 넣음
+      concurrency: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      #value-serializer:  org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 0은 프로듀서가 브로커 한테 메시지를 신경쓰지 않고 보내는것
+      # 1은 기본으로 사용하는 옵션(리더 파티션이 받았다고 응답이 오면 프로듀서가 성공했다고 인지, 리더 파티션으로 받지 않으면 retry)
+      # -1은 리더 파티션 뿐만 아니라 팔로우 파티션까지 확인해야 메시지를 확인했다고 간주하고 다음 메시지 생산, 확인 되지 않으면 produce를 retry
+      acks: 1
